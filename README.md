@@ -1,234 +1,234 @@
-# Dokumentation: EPR-Übung 8 Code Review
+# Documentation: EPR Exercise 8 Code Review
 **8500551 Mirza, 8811983 Bekker**
 
 ---
 
-## Einführung
+## Introduction
 
-Diese Dokumentation beschreibt die Implementierung einer objektorientierten Ökosystem-Simulation in Python. Das Modell simuliert ein Habitat mit verschiedenen Lebewesen (Pflanzenfresser, Allesfresser, Fleischfresser) und Pflanzen über mehrere Runden hinweg.
+This documentation describes the implementation of an object-oriented ecosystem simulation in Python. The model simulates a habitat with various living creatures (herbivores, omnivores, carnivores) and plants over multiple rounds.
 
-Ziel ist es, das Zusammenwirken von Nahrungsketten, Fortpflanzung, Wachstum und Zufallsereignissen in einem begrenzten Lebensraum darzustellen.
-
----
-
-## Projektstruktur
-
-Das Projekt besteht aus vier Hauptprogrammen:
-
-### `main.py` — Hauptsteuerung und Benutzeroberfläche
-
-**Ablauf:**
-1. Abfrage der Spielergeschwindigkeit (1 = langsam, 2 = mittel, 3 = schnell)
-2. Initialisierung von 3 Pflanzenarten (Baum, Efeu, Pilz) mit Parametern
-3. Initialisierung von 3 Tierarten (Pflanzenfresser, Allesfresser, Fleischfresser)
-4. Habitat-Einstellung basierend auf Gesamtkapazität
-5. Hauptsimulationsschleife mit Benutzerinteraktion
+The goal is to represent the interplay of food chains, reproduction, growth, and random events within a limited living space.
 
 ---
 
-### `habitat.py` — Habitat-Klasse mit Simulationslogik
+## Project Structure
 
-**Klasse:** `Habitat` → verwaltet den Lebensraum und koordiniert die Simulation
+The project consists of four main programs:
 
-**Attribute:**
+### `main.py` — Main Control and User Interface
 
-| Attribut | Beschreibung |
+**Flow:**
+1. Prompt for game speed (1 = slow, 2 = medium, 3 = fast)
+2. Initialization of 3 plant species (Tree, Ivy, Mushroom) with parameters
+3. Initialization of 3 animal species (Herbivore, Omnivore, Carnivore)
+4. Habitat setup based on total capacity
+5. Main simulation loop with user interaction
+
+---
+
+### `habitat.py` — Habitat Class with Simulation Logic
+
+**Class:** `Habitat` → manages the living space and coordinates the simulation
+
+**Attributes:**
+
+| Attribute | Description |
 |---|---|
-| `capacity` | Maximale Kapazität des Habitats |
-| `used_capacity` | Aktuell belegter Platz |
-| `plants` | Liste aller Pflanzenobjekte |
-| `creatures` | Liste aller Tierobjekte |
-| `season` | Aktuelle Jahreszeit |
-| `round` | Aktuelle Simulationsrunde |
-| `disaster_probability` | Katastrophenstatus |
+| `capacity` | Maximum capacity of the habitat |
+| `used_capacity` | Currently occupied space |
+| `plants` | List of all plant objects |
+| `creatures` | List of all creature objects |
+| `season` | Current season |
+| `round` | Current simulation round |
+| `disaster_probability` | Disaster status |
 
-**Kernmethoden:**
+**Core Methods:**
 
-| Methode | Beschreibung |
+| Method | Description |
 |---|---|
-| `simulate_game()` | Führt eine komplette Simulationsrunde durch |
-| `update_season()` | Wechselt Jahreszeit im 3-Runden-Zyklus |
-| `update_disaster_probability()` | Prüft auf Katastrophen (5% Chance) |
-| `show_status()` | Zeigt aktuellen Systemstatus an |
+| `simulate_game()` | Executes a complete simulation round |
+| `update_season()` | Changes season in a 3-round cycle |
+| `update_disaster_probability()` | Checks for disasters (5% chance) |
+| `show_status()` | Displays the current system status |
 
 ---
 
-### `creatures.py` — Tierklassen (`Creature`, `Herbivore`, `Omnivore`, `Carnivore`)
+### `creatures.py` — Animal Classes (`Creature`, `Herbivore`, `Omnivore`, `Carnivore`)
 
-**Basisklasse:** `Creature` → Abstrakte Repräsentation eines Tieres
+**Base Class:** `Creature` → Abstract representation of an animal
 
-**Attribute:**
+**Attributes:**
 
-| Attribut | Beschreibung |
+| Attribute | Description |
 |---|---|
-| `size` | Aktuelle Größe |
-| `is_alive` | Lebensstatus |
-| `hungry_days` | Tage ohne Nahrung |
-| `habitat` | Referenz zum zugehörigen Habitat |
+| `size` | Current size |
+| `is_alive` | Life status |
+| `hungry_days` | Days without food |
+| `habitat` | Reference to the associated habitat |
 
-**Spezialisierte Klassen:**
+**Specialized Classes:**
 
-#### `Herbivore` (Pflanzenfresser)
-- Frisst ausschließlich Pflanzen
-- Erfolgswahrscheinlichkeit: 45–65% (abhängig von Pflanzengröße)
-- Stirbt nach **2 Tagen** ohne Nahrung
+#### `Herbivore`
+- Eats plants exclusively
+- Success probability: 45–65% (depending on plant size)
+- Dies after **2 days** without food
 
-#### `Omnivore` (Allesfresser)
-- Wählt zufällig zwischen Pflanzen (50%) und Tieren (50%)
-- Jagderfolg: 60%
-- Stirbt nach **3 Tagen** ohne Nahrung
+#### `Omnivore`
+- Randomly chooses between plants (50%) and animals (50%)
+- Hunting success: 60%
+- Dies after **3 days** without food
 
-#### `Carnivore` (Fleischfresser)
-- Jagt ausschließlich andere Tiere (keine Kannibalen)
-- Jagderfolg: 60%
-- Stirbt nach **3 Tagen** ohne Nahrung
+#### `Carnivore`
+- Hunts other animals exclusively (no cannibalism)
+- Hunting success: 60%
+- Dies after **3 days** without food
 
 ---
 
-### `plants.py` — Pflanzenklassen (`Plant`, `Tree`, `Ivy`, `Mushroom`)
+### `plants.py` — Plant Classes (`Plant`, `Tree`, `Ivy`, `Mushroom`)
 
-**Basisklasse:** `Plant` → Abstrakte Repräsentation einer Pflanze
+**Base Class:** `Plant` → Abstract representation of a plant
 
-**Attribute:**
+**Attributes:**
 
-| Attribut | Beschreibung |
+| Attribute | Description |
 |---|---|
-| `size` | Aktuelle Größe |
-| `min_size` | Minimale Überlebensgröße |
-| `max_size` | Maximale Wachstumsgröße |
-| `growth_rate` | Wachstum pro Runde |
-| `isalive` | Lebensstatus |
-| `habitat` | Referenz zum zugehörigen Habitat |
+| `size` | Current size |
+| `min_size` | Minimum survival size |
+| `max_size` | Maximum growth size |
+| `growth_rate` | Growth per round |
+| `isalive` | Life status |
+| `habitat` | Reference to the associated habitat |
 
-> **Wachstumslogik:** Pflanzen wachsen abhängig von Jahreszeit und verfügbarem Platz.
+> **Growth Logic:** Plants grow depending on the current season and available space.
 
 ---
 
-## Implementierte Simulationsregeln
+## Implemented Simulation Rules
 
-### Grundregeln
+### Basic Rules
 
-1. **Rundenbasiertes System:** Jede Runde = 1 Monat
-2. **Kapazitätslimit:** Habitat kann nicht überfüllt werden
-3. **Jahreszeitenzyklus:** Frühling → Sommer → Herbst → Winter
-4. **Überlebensmechanik:** Tiere müssen regelmäßig fressen
-5. **Pflanzenwachstum:** Abhängig von Jahreszeit und Pflanzenart
+1. **Round-based System:** Each round = 1 month
+2. **Capacity Limit:** Habitat cannot be overfilled
+3. **Season Cycle:** Spring → Summer → Autumn → Winter
+4. **Survival Mechanic:** Animals must feed regularly
+5. **Plant Growth:** Depends on season and plant species
 
-### Erweiterte Regeln
+### Extended Rules
 
-#### 1. Jahreszeiteneffekte
+#### 1. Seasonal Effects
 
-| Jahreszeit | Pflanzenwachstum | Jagd |
+| Season | Plant Growth | Hunting |
 |---|---|---|
-| Frühling | +1 zusätzliches Wachstum | Normal |
-| Sommer | Normales Wachstum | Normal |
-| Herbst | Kein Wachstum | Normal |
-| Winter | Kein Wachstum | Keine Jagd für Räuber |
+| Spring | +1 additional growth | Normal |
+| Summer | Normal growth | Normal |
+| Autumn | No growth | Normal |
+| Winter | No growth | No hunting for predators |
 
-#### 2. Katastrophensystem
-- 5% Chance pro Runde für ein Ereignis, das alle Tiere schädigt
+#### 2. Disaster System
+- 5% chance per round for an event that damages all animals
 
-#### 3. Größenabhängige Interaktionen
-- Größere Pflanzen sind schwerer zu fressen
+#### 3. Size-Dependent Interactions
+- Larger plants are harder to eat
 
-#### 4. Artenspezifische Hungertoleranz
+#### 4. Species-Specific Hunger Tolerance
 
-| Art | Hungertage |
+| Species | Hunger Days |
 |---|---|
-| Pflanzenfresser | 2 Tage |
-| Allesfresser | 3 Tage |
-| Fleischfresser | 3 Tage |
+| Herbivore | 2 days |
+| Omnivore | 3 days |
+| Carnivore | 3 days |
 
-#### 5. Intelligente Nahrungswahl
-- Allesfresser wägen zwischen Pflanzen und Tieren ab
+#### 5. Intelligent Food Selection
+- Omnivores weigh options between plants and animals
 
-#### 6. Ökologisches Gleichgewicht
-- Fleischfresser jagen keine Artgenossen
+#### 6. Ecological Balance
+- Carnivores do not hunt members of their own species
 
-#### 7. Kapazitätsmanagement
-- Wachstum nur bei verfügbarem Platz
+#### 7. Capacity Management
+- Growth only occurs when space is available
 
-#### 8. Spielgeschwindigkeit
+#### 8. Game Speed
 
-| Geschwindigkeit | Wachstumsrate | Fressintensität (Einheiten/Angriff) |
+| Speed | Growth Rate | Feeding Intensity (units/attack) |
 |---|---|---|
-| 1 (langsam) | 3 | 1 |
-| 2 (mittel) | 2 | 2 |
-| 3 (schnell) | 1 | 3 |
+| 1 (slow) | 3 | 1 |
+| 2 (medium) | 2 | 2 |
+| 3 (fast) | 1 | 3 |
 
-> **Spielmechanik:** Hohe Geschwindigkeit = schnelle, volatile Veränderungen; Niedrige Geschwindigkeit = stabile, nachhaltige Ökosysteme.
+> **Game Mechanic:** High speed = fast, volatile changes; Low speed = stable, sustainable ecosystems.
 
-#### 9. Pausenmechanismus
-- Option `1` im Hauptmenü pausiert die Simulation für 10 Sekunden
-- Ermöglicht Beobachtung des aktuellen Zustands ohne weitere Simulation
-- Nützlich für detaillierte Analyse der Ökosystemdynamik
+#### 9. Pause Mechanism
+- Option `1` in the main menu pauses the simulation for 10 seconds
+- Allows observation of the current state without further simulation
+- Useful for detailed analysis of ecosystem dynamics
 
 ---
 
-## Zufallsmechanismen
+## Random Mechanisms
 
-### Primäre Zufallsaspekte
+### Primary Random Aspects
 
-| Mechanismus | Wahrscheinlichkeit |
+| Mechanism | Probability |
 |---|---|
-| Katastrophenereignisse | 5% pro Runde |
-| Pflanzen fressen | 45–65% |
-| Tierjagd | 60% |
+| Disaster events | 5% per round |
+| Eating plants | 45–65% |
+| Animal hunting | 60% |
 
-### Sekundäre Zufallsfaktoren
+### Secondary Random Factors
 
-- **Nahrungsauswahl:** Allesfresser-Entscheidung (50/50)
-- **Zielauswahl:** Zufällige Auswahl verfügbarer Beute
-- **Katastrophenintensität:** Gleichmäßiger Schaden für alle Tiere
+- **Food selection:** Omnivore decision (50/50)
+- **Target selection:** Random selection of available prey
+- **Disaster intensity:** Equal damage to all animals
 
 ---
 
-## Benutzeroberfläche und Steuerung
+## User Interface and Controls
 
-### Initialisierungsphase
+### Initialization Phase
 
 ```
-Spielgeschwindigkeit wählen:
-  1: langsam
+Choose game speed:
+  1: slow
   2: medium
-  3: schnell
+  3: fast
 ```
 
-**Pflanzenparameter (pro Art):**
-- Aktuelle Größe
-- Minimale Größe
-- Maximale Größe
+**Plant parameters (per species):**
+- Current size
+- Minimum size
+- Maximum size
 
-**Tierparameter (pro Art):**
-- Startgröße
+**Animal parameters (per species):**
+- Starting size
 
-### Hauptmenü
+### Main Menu
 
-Nach jeder Runde:
+After each round:
 
 ```
-1: Runde pausieren
-2: Nächste Runde simulieren
-q: Spiel beenden
+1: Pause round
+2: Simulate next round
+q: Quit game
 ```
 
-### Statusanzeige
+### Status Display
 
-Pro Runde werden ausgegeben:
-- Rundennummer und Jahreszeit
-- Habitat-Auslastung (belegt/gesamt)
-- Status aller Pflanzen und Tiere
-- Ereignisprotokoll (Tode, Wachstum, Katastrophen)
+Output per round:
+- Round number and season
+- Habitat utilization (used/total)
+- Status of all plants and animals
+- Event log (deaths, growth, disasters)
 
-### Spielende
+### End of Game
 
-Automatisches Ende bei:
-- Aussterben aller Pflanzen
-- Aussterben aller Tiere
+Automatic end when:
+- All plants go extinct
+- All animals go extinct
 
 ---
 
-## UML-Diagramm
+## UML Diagram
 
 ```mermaid
 classDiagram
@@ -317,7 +317,7 @@ classDiagram
     Plant "*" --> "1" Habitat : lives in
 ```
 
-> **Hinweise zum Diagramm:**
-> - Jahreszeiten wechseln alle 3 Runden
-> - Katastrophen treten zufällig mit 5% Wahrscheinlichkeit auf
-> - Pflanzenwachstum hängt von der Jahreszeit ab: Frühling = schneller, Sommer = normal, Herbst/Winter = kein Wachstum
+> **Diagram Notes:**
+> - Seasons change every 3 rounds
+> - Disasters occur randomly with a 5% probability
+> - Plant growth depends on the season: Spring = faster, Summer = normal, Autumn/Winter = no growth
