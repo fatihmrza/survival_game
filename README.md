@@ -1,5 +1,5 @@
-# Documentation: EPR Exercise 8 Code Review
-**8500551 Mirza, 8811983 Bekker**
+# Documentation
+**8500551 Mirza**
 
 ---
 
